@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
-import "./Navbar.css";
+import { NavLink } from "react-router";
+import BarberLogo from "./BarberLogo";
+
 
 const links = [
   { to: "/", label: "Home" },
@@ -11,7 +12,10 @@ export default function Navbar() {
     return (
         <header className="navbar">
             <nav className="navbar__inner" aria-label="Main navigation">
-                <span className="navbar__brand">MySite</span>
+                <div className="navbar__brand">
+                    <BarberLogo size={42} />
+                    <span>Barber Shop</span>
+                </div>
         
                 <ul className="navbar__links">
                   {links.map(({ to, label }) => (
