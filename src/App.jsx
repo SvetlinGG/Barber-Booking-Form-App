@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Routes, Route } from 'react-router'
 
 
 function App() {
@@ -6,7 +6,11 @@ function App() {
 
   return (
     <>
-     <h1>Barber booking form</h1>
+     
+     <Routes>
+
+     </Routes>
+     
     </>
   )
 }
