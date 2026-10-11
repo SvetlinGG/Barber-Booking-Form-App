@@ -1,4 +1,23 @@
-export default function UserData() {
+const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
+const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
+export default function UserData({
+  clients
+}) {
+
+
+
+  fetch(baseURL, {
+      method: 'GET',
+      body: JSON.stringify(clients),
+      headers: {
+        'apikey': apiKey,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      }
+    })
+
+
+
     return (
         <main className="userdata">
       <div className="userdata__header">
@@ -28,11 +47,11 @@ export default function UserData() {
             <tbody>
               
                 <tr >
-                  <td data-label="First name"></td>
-                  <td data-label="Last name"></td>
-                  <td data-label="Date"></td>
-                  <td data-label="Phone"></td>
-                  <td data-label="Email"></td>
+                  <td data-label="First name">{clients.firstName}</td>
+                  <td data-label="Last name">{clients.lastName}</td>
+                  <td data-label="Date">{clients.date}</td>
+                  <td data-label="Phone">{clients.phoneNumber}</td>
+                  <td data-label="Email">{clients.email}</td>
                   <td>
                     <button
                       className="userdata__delete"
