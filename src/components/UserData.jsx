@@ -1,8 +1,33 @@
+import { useState } from "react";
+
 const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
 const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
+
+function loadBookings(){
+  try {
+    return JSON.parse(localStorage.getItem("bookings") || "[]");
+  } catch{
+    return []
+  }
+
+}
 export default function UserData({
   clients
 }) {
+
+  const [bookings, setBookings] = useState(loadBookings);
+
+  const save = (updated) => {
+    setBookings(updated);
+    localStorage.setItem("bookings", JSON.stringify(updated))
+  };
+
+  const handleDelete = (id) => {
+    save(bookings.filter((b) => b.id !== id))
+  }
+
+
+  
 
 
 
@@ -21,7 +46,7 @@ export default function UserData({
     return (
         <main className="userdata">
       <div className="userdata__header">
-        <h1>User Data</h1>
+        <h1>Client Data</h1>
         
           <button className="userdata__clear" >
             Clear all
@@ -55,7 +80,7 @@ export default function UserData({
                   <td>
                     <button
                       className="userdata__delete"
-                      
+                      onClick={handleDelete}
                     >
                       Delete
                     </button>
