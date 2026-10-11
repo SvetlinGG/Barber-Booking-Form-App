@@ -12,8 +12,20 @@ export default function Booking() {
     const clients = {
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
-      email: formData.get('email')
+      email: formData.get('email'),
+      phoneNumber: formData.get('phoneNumber'),
+      date: formData.get('date')
     }
+
+    fetch(baseURL, {
+      method: 'POST',
+      body: JSON.stringify(clients),
+      headers: {
+        'apikey': apiKey,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      }
+    })
   }
 
 
@@ -21,14 +33,13 @@ export default function Booking() {
          <main className="booking">
       <h1>Booking</h1>
 
-      <form className="booking__form"  noValidate>
+      <form className="booking__form" onSubmit={saveClickHandler}>
         <div className="booking__row">
           <div className="booking__field">
             <label htmlFor="firstName">First name</label>
             <input
               id="firstName"
               name="firstName"
-              
               type="text"
               autoComplete="given-name"
               
