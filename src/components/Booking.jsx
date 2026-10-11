@@ -1,4 +1,22 @@
+const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
+const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
+
+
 export default function Booking() {
+
+  const saveClickHandler = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const clients = {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email')
+    }
+  }
+
+
     return (
          <main className="booking">
       <h1>Booking</h1>
@@ -10,6 +28,7 @@ export default function Booking() {
             <input
               id="firstName"
               name="firstName"
+              
               type="text"
               autoComplete="given-name"
               
