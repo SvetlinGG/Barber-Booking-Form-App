@@ -1,5 +1,5 @@
-const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
-const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
+const baseURL = import.meta.env.VITE_SUPABASE_URL;
+const apiKey = import.meta.env.VITE_SUPABASE_KEY;
 
 
 export default function Booking() {

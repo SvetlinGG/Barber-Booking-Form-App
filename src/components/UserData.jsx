@@ -1,71 +1,62 @@
 import { useEffect, useState } from "react";
 import { fromIsoDate } from "../utils/timeDateUtils";
 
-const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
-const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
+const baseURL = import.meta.env.VITE_SUPABASE_URL;
+const apiKey = import.meta.env.VITE_SUPABASE_KEY;
 
-function loadBookings(){
-  try {
-    return JSON.parse(localStorage.getItem("bookings") || "[]");
-  } catch{
-    return []
-  }
-
-}
-export default function UserData({
-  userId,
-  
-}) {
-
-  const [bookings, setBookings] = useState(loadBookings);
-  const [user, setUser] = useState({})
-
-  const save = (updated) => {
-    setBookings(updated);
-    localStorage.setItem("bookings", JSON.stringify(updated))
-  };
-
-  const handleDelete = (id) => {
-    save(bookings.filter((b) => b.id !== id))
-  }
-
-
+export default function UserData() {
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`${baseURL}?id=eq.${userId}`, {
+    fetch(baseURL, {
       method: 'GET',
-      body: JSON.stringify(user),
       headers: {
         'apikey': apiKey,
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
     })
-    .then((response) => response.json())
-    .then((data) => setUser(data[0]))
-    .catch(error => {console.error('Error fetchin using data:', error)}
-  )},[userId])
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error('Error fetching user data:', error));
+  }, []);
 
-  if (!user) return null;
+  const handleDelete = (id) => {
+    fetch(`${baseURL}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': apiKey,
+        'Authorization': `Bearer ${apiKey}`
+      },
+    })
+      .then(() => setUsers((prev) => prev.filter((u) => u.id !== id)))
+      .catch((error) => console.error('Error deleting user:', error));
+  };
 
-    
+  const handleClearAll = () => {
+    fetch(baseURL, {
+      method: 'DELETE',
+      headers: {
+        'apikey': apiKey,
+        'Authorization': `Bearer ${apiKey}`
+      },
+    })
+      .then(() => setUsers([]))
+      .catch((error) => console.error('Error clearing users:', error));
+  };
 
-
-
-    return (
-        <main className="userdata">
+  return (
+    <main className="userdata">
       <div className="userdata__header">
         <h1>Client Data</h1>
-        
-          <button className="userdata__clear" >
-            Clear all
-          </button>
-        
+        <button className="userdata__clear" onClick={handleClearAll}>
+          Clear all
+        </button>
       </div>
 
-      
+      {users.length === 0 ? (
         <p className="userdata__empty">No bookings yet.</p>
-      
+      ) : (
         <div className="userdata__tablewrap">
           <table className="userdata__table">
             <thead>
@@ -79,8 +70,8 @@ export default function UserData({
               </tr>
             </thead>
             <tbody>
-              
-                <tr >
+              {users.map((user) => (
+                <tr key={user.id}>
                   <td data-label="First name">{user.firstName}</td>
                   <td data-label="Last name">{user.lastName}</td>
                   <td data-label="Date">{fromIsoDate(user.date)}</td>
@@ -89,17 +80,17 @@ export default function UserData({
                   <td>
                     <button
                       className="userdata__delete"
-                      onClick={handleDelete}
+                      onClick={() => handleDelete(user.id)}
                     >
                       Delete
                     </button>
                   </td>
                 </tr>
-              
+              ))}
             </tbody>
           </table>
         </div>
-      
+      )}
     </main>
-    );
+  );
 }
