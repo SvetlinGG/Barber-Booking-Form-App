@@ -1,21 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const baseURL = 'https://pntezrlzpnvbmxjltaqr.supabase.co/rest/v1/users';
 const apiKey = 'sb_publishable_1YnOAlXkaINLpwxGrT8QNg_-ssIpzlT';
 
-function loadBookings(){
-  try {
-    return JSON.parse(localStorage.getItem("bookings") || "[]");
-  } catch{
-    return []
-  }
+// function loadBookings(){
+//   try {
+//     return JSON.parse(localStorage.getItem("bookings") || "[]");
+//   } catch{
+//     return []
+//   }
 
-}
+// }
 export default function UserData({
+  userId,
   clients
 }) {
 
-  const [bookings, setBookings] = useState(loadBookings);
+  const [bookings, setBookings] = useState({});
+  const [user, setUser] = useState({})
 
   const save = (updated) => {
     setBookings(updated);
@@ -27,19 +29,25 @@ export default function UserData({
   }
 
 
-  
 
-
-
-  fetch(baseURL, {
-      method: 'GET',
-      body: JSON.stringify(clients),
+  useEffect(() => {
+    fetch(`${baseURL}?id=eq.${userId}`, {
+      //method: 'GET',
+      //body: JSON.stringify(clients),
       headers: {
         'apikey': apiKey,
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      }
+        //'Content-Type': 'application/json',
+        //'Authorization': `Bearer ${apiKey}`
+      },
     })
+    .then((response) => response.json())
+    .then((data) => setUser(data[0]))
+    .catch(error => {console.error('Error fetchin using data:', error)}
+  )},[userId])
+
+  if (!user) return null;
+
+    
 
 
 
